@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import static com.hmdp.utils.RedisConstants.LOGIN_USER_TTL;
 
 /**
- * ClassName: LoginInterceptor
+ * ClassName: RefreshTokenInterceptor
  * Package: com.hmdp.utils
  *
  * @author 庐陵小康
@@ -22,12 +22,12 @@ import static com.hmdp.utils.RedisConstants.LOGIN_USER_TTL;
  * @Desc
  * @Date 2023/5/6 20:29
  */
-public class LoginInterceptor implements HandlerInterceptor {
+public class RefreshTokenInterceptor implements HandlerInterceptor {
 
 
     private StringRedisTemplate stringRedisTemplate;
 
-    public LoginInterceptor(StringRedisTemplate stringRedisTemplate){
+    public RefreshTokenInterceptor(StringRedisTemplate stringRedisTemplate){
         this.stringRedisTemplate = stringRedisTemplate;
     }
 
@@ -36,9 +36,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         //1.获取请求头中的token
         String token = request.getHeader("authorization");
         if(StrUtil.isBlank(token)){
-            //不存在，拦截,  返回 401 状态码（未授权）
-            response.setStatus(401);
-            return false;
+            return true;
         }
         //2.基于token获取redis中的用户
         String tokenKey = RedisConstants.LOGIN_USER_KEY + token;
@@ -47,9 +45,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         //3.判断用户是否存在
         if(userMap.isEmpty()){
-            //4.不存在，拦截,  返回 401 状态码（未授权）
-            response.setStatus(401);
-            return false;
+            return true;
         }
         //5.将查询到的Hash对象转为UserDTO对象
         UserDTO userDTO = BeanUtil.fillBeanWithMap(userMap, new UserDTO(), false);
