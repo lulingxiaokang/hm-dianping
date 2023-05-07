@@ -112,8 +112,8 @@ public class CacheClient {
     private static final ExecutorService CACHE_REBUILD_EXECUTOR = Executors.newFixedThreadPool(10);
 
     public <R, ID> R queryWithLogicalExpire(
-            String keyPrefix, ID id, Class<R> type,
-            Function<ID, R> dbFallback,
+            String keyPrefix, String lockPrefix, ID id,
+            Class<R> type, Function<ID, R> dbFallback,
             Long time, TimeUnit unit) {
         //1.从redis查询商铺缓存
         String key = keyPrefix + id;
@@ -136,7 +136,7 @@ public class CacheClient {
         //5.2.已过期，需要缓存重建
         //6.缓存重建
         //6.1.获取互斥锁
-        String lockKey = LOCK_SHOP_KEY + id;
+        String lockKey = lockPrefix + id;
         boolean isLock = tryLock(lockKey);
         //6.2.判断是否获取锁成功
         if(isLock){
