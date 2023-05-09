@@ -3,7 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 #!**/src/main/**/target/
 #!**/src/test/**/target/
-
+nginx-1.18.0/logs/
 
 ### STS ###
 .apt_generated
@@ -19,7 +19,7 @@ target/
 *.iws
 *.iml
 *.ipr
-nginx-1.18.0/logs
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
